@@ -1,21 +1,29 @@
 <template>
     <div class="v-add-item">
-        <form class="v-add-item__form">
+        <form class="v-add-item__form" @submit.prevent="submitHandler">
             <div class="v-add-item__form_content">
                 <div class="v-add-item__form_content_input-name">
-                    <small class="helper-text invalid"
+                    <label
                         >Наименование товара
-                        <img src="../assets/redd.png" alt="image-redd"
-                    /></small>
+                        <img src="../assets/redd.png" alt="image-redd" />
+                    </label>
                     <input
                         id="name"
                         type="text"
                         class="validate"
                         placeholder="Введите наименование товара"
+                        v-model="nameItem"
+                        :class="{
+                            invalid:
+                                $v.nameItem.$dirty && !$v.nameItem.required,
+                        }"
                     />
+                    <p v-if="$v.nameItem.$dirty && !$v.nameItem.required">
+                        Поле является обязательным
+                    </p>
                 </div>
                 <div class="v-add-item__form_content_input-discription">
-                    <small class="helper-text invalid">Описание товара</small>
+                    <label>Описание товара</label>
                     <textarea
                         id="description"
                         type="text"
@@ -23,33 +31,71 @@
                     />
                 </div>
                 <div class="v-add-item__form_content_input-url">
-                    <small class="helper-text invalid"
+                    <label
                         >Ссылка на изображение товара
                         <img src="../assets/redd.png" alt="image-redd" />
-                    </small>
+                    </label>
                     <input
                         id="image-link"
                         type="url"
                         class="validate"
                         placeholder="Введите ссылку"
+                        v-model="url"
+                        :class="{
+                            invalid:
+                                ($v.url.$dirty && !$v.url.required) ||
+                                ($v.url.$dirty && !$v.url.url),
+                        }"
                     />
+                    <p v-if="$v.url.$dirty && !$v.url.required">
+                        Поле является обязательным
+                    </p>
+                    <p v-else-if="$v.url.$dirty && !$v.url.url">
+                        Поле должно содержать корректный URL-адрес
+                    </p>
                 </div>
                 <div class="v-add-item__form_content_input-price">
-                    <small class="helper-text invalid"
+                    <label
                         >Цена товара
-                        <img src="../assets/redd.png" alt="image-redd"
-                    /></small>
+                        <img src="../assets/redd.png" alt="image-redd" />
+                    </label>
                     <input
                         id="price"
                         type="text"
                         class="validate"
                         placeholder="Введите цену"
+                        v-model="price"
+                        :class="{
+                            invalid:
+                                ($v.price.$dirty && !$v.price.required) ||
+                                ($v.price.$dirty && !$v.price.numeric),
+                        }"
                     />
+                    <p v-if="$v.price.$dirty && !$v.price.required">
+                        Поле является обязательным
+                    </p>
+                    <p v-else-if="$v.price.$dirty && !$v.price.numeric">
+                        Поле должно содержать только цифры
+                    </p>
                 </div>
             </div>
             <div class="v-add-item__form_card-action">
                 <div>
-                    <button class="btn" type="submit">Добавить товар</button>
+                    <button
+                        class="btn"
+                        type="submit"
+                        :class="{
+                            active: !(
+                                ($v.nameItem.$dirty && !$v.nameItem.required) ||
+                                ($v.url.$dirty && !$v.url.required) ||
+                                ($v.url.$dirty && !$v.url.url) ||
+                                ($v.price.$dirty && !$v.price.required) ||
+                                ($v.price.$dirty && !$v.price.numeric)
+                            ),
+                        }"
+                    >
+                        Добавить товар
+                    </button>
                 </div>
             </div>
         </form>
@@ -57,19 +103,37 @@
 </template>
 
 <script>
+import { url, numeric, required } from "vuelidate/lib/validators";
 export default {
     name: "v-add-item",
     data() {
-        return {};
+        return {
+            nameItem: "",
+            url: "",
+            price: "",
+        };
     },
-    methods: {},
+    validations: {
+        nameItem: { required },
+        url: { url, required },
+        price: { numeric, required },
+    },
+    methods: {
+        submitHandler() {
+            if (this.$v.$invalid) {
+                this.$v.$touch();
+                return;
+            }
+            console.log("submit");
+        },
+    },
 };
 </script>
 
 <style lang="scss" scoped>
 .v-add-item {
     width: 332px;
-    height: 440px;
+    height: min-content;
     margin: 0 8px 24px 0;
     background: #fffefb;
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04),
@@ -90,7 +154,7 @@ export default {
             }
         }
         &_card-action {
-            button {
+            .btn {
                 margin: 6px 24px 24px 24px;
                 background: #eeeeee;
                 border-radius: 10px;
@@ -102,20 +166,27 @@ export default {
                 font-weight: 600;
                 font-size: 12px;
                 line-height: 15px;
-                /* identical to box height */
-
                 text-align: center;
                 letter-spacing: -0.02em;
-
-                /* Greys / 500 */
-
                 color: #b4b4b4;
+                &:hover {
+                    cursor: pointer;
+                    box-shadow: 0px 20px 30px #7bae73,
+                        0px 6px 10px rgba(0, 0, 0, 0.521);
+                }
             }
         }
     }
 }
+.active {
+    background: #7bae73 !important;
+    color: white !important;
+}
+.invalid {
+    border: 1px solid #ff8484;
+}
 input {
-    margin: 4px 24px 8px 24px;
+    margin: 4px 24px 0 24px;
     background: #fffefb;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
@@ -138,7 +209,7 @@ input {
     }
 }
 textarea {
-    margin: 4px 24px 8px 24px;
+    margin: 4px 24px 0 24px;
     background: #fffefb;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
@@ -159,7 +230,7 @@ textarea {
         outline: none;
     }
 }
-small {
+label {
     margin-top: 0;
     margin-left: 24px;
     font-weight: 400;
@@ -168,7 +239,20 @@ small {
     letter-spacing: -0.02em;
     color: #49485e;
 }
+p {
+    margin: 0 auto 0 24px;
+    font-weight: 400;
+    font-size: 8px;
+    line-height: 10px;
+    letter-spacing: -0.02em;
+    color: #ff8484;
+}
 img {
     margin-bottom: 6px;
+}
+@media (max-width: 450px) {
+    .v-add-item {
+        margin-right: 0;
+    }
 }
 </style>

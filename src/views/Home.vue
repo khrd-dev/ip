@@ -79,6 +79,7 @@ export default {
         }
     }
 }
+
 .sort-btn {
     width: 121.49px;
     height: 36px;
@@ -91,5 +92,18 @@ export default {
     font-size: 12px;
     line-height: 15px;
     color: #b4b4b4;
+    &:hover {
+        background: #e6e6e6;
+    }
+}
+@media (max-width: 1100px) {
+    .home__content {
+        margin: 15px;
+        &_elem {
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+    }
 }
 </style>

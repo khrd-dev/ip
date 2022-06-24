@@ -30,8 +30,16 @@ export default {
     &__list {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: space-around;
         align-items: center;
+    }
+}
+@media (max-width: 1100px) {
+    .v-catalog {
+        &__list {
+            align-items: center;
+            justify-content: space-around;
+        }
     }
 }
 </style>
