@@ -1,5 +1,6 @@
 <template>
     <div class="v-add-item">
+        <h1>Добавление товара</h1>
         <form class="v-add-item__form" @submit.prevent="submitHandler">
             <div class="v-add-item__form_content">
                 <div class="v-add-item__form_content_input-name">
@@ -28,6 +29,7 @@
                         id="description"
                         type="text"
                         placeholder="Введите описание товара"
+                        v-model="description"
                     />
                 </div>
                 <div class="v-add-item__form_content_input-url">
@@ -94,7 +96,7 @@
                             ),
                         }"
                     >
-                        Добавить товар
+                        {{ nameBtn }}
                     </button>
                 </div>
             </div>
@@ -108,7 +110,9 @@ export default {
     name: "v-add-item",
     data() {
         return {
+            nameBtn: "Добавить товар",
             nameItem: "",
+            description: "",
             url: "",
             price: "",
         };
@@ -119,12 +123,33 @@ export default {
         price: { numeric, required },
     },
     methods: {
-        submitHandler() {
+        async submitHandler() {
             if (this.$v.$invalid) {
                 this.$v.$touch();
                 return;
             }
-            console.log("submit");
+            const formData = {
+                nameItem: this.nameItem,
+                description: this.description
+                    ? this.description
+                    : "Описания нет",
+                url: this.url,
+                price: this.price,
+                id: Date.now(),
+            };
+            try {
+                await this.$store.dispatch("createItem", formData);
+                this.nameItem = "";
+                this.description = "";
+                this.url = "";
+                this.price = "";
+                this.nameBtn = "Товар успешно добавлен!";
+                setTimeout(() => (this.nameBtn = "Добавить товар"), 2000);
+                return;
+            } catch (e) {
+                this.nameBtn = `Ошибка ${e} Повторите позже`;
+                setTimeout(() => (this.nameBtn = "Добавить товар"), 2000);
+            }
         },
     },
 };
@@ -132,14 +157,21 @@ export default {
 
 <style lang="scss" scoped>
 .v-add-item {
-    width: 332px;
-    height: min-content;
-    margin: 0 8px 24px 0;
-    background: #fffefb;
-    box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04),
-        0px 6px 10px rgba(0, 0, 0, 0.02);
-    border-radius: 4px;
+    position: fixed;
+    h1 {
+        font-weight: 600;
+        font-size: 28px;
+        line-height: 35px;
+        margin: 32px auto 16px 0;
+    }
     &__form {
+        width: 332px;
+        height: min-content;
+        margin: 0 8px 24px 0;
+        background: #fffefb;
+        box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04),
+            0px 6px 10px rgba(0, 0, 0, 0.02);
+        border-radius: 4px;
         &_content {
             margin-top: 24px;
             &_input-discription {
@@ -171,7 +203,7 @@ export default {
                 color: #b4b4b4;
                 &:hover {
                     cursor: pointer;
-                    box-shadow: 0px 20px 30px #7bae73,
+                    box-shadow: 0px 20px 30px #b4b4b4,
                         0px 6px 10px rgba(0, 0, 0, 0.521);
                 }
             }
@@ -181,6 +213,9 @@ export default {
 .active {
     background: #7bae73 !important;
     color: white !important;
+    &:hover {
+        box-shadow: 0px 20px 30px #7bae73, 0px 6px 10px rgba(0, 0, 0, 0.521) !important;
+    }
 }
 .invalid {
     border: 1px solid #ff8484;
@@ -250,9 +285,17 @@ p {
 img {
     margin-bottom: 6px;
 }
-@media (max-width: 450px) {
+@media (max-width: 1140px) {
     .v-add-item {
-        margin-right: 0;
+        position: relative;
+        &__form {
+            margin: 0 auto;
+        }
+        h1 {
+            position: relative;
+            width: 332px;
+            margin: 0 auto;
+        }
     }
 }
 </style>
