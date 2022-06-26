@@ -191,6 +191,7 @@ export default {
                 background: #eeeeee;
                 border-radius: 10px;
                 border: none;
+                outline: none;
                 width: 284px;
                 height: 36px;
                 font-family: "Inter";
@@ -201,6 +202,10 @@ export default {
                 text-align: center;
                 letter-spacing: -0.02em;
                 color: #b4b4b4;
+                &:active {
+                    border: none;
+                    outline: none;
+                }
                 &:hover {
                     cursor: pointer;
                     box-shadow: 0px 20px 30px #b4b4b4,
