@@ -319,12 +319,11 @@ label {
 @media (max-width: 1140px) {
     .v-add-item {
         position: relative;
-        &__form {
-            margin: 0 auto;
-        }
-        h1 {
-            position: relative;
+        &__title {
+            margin: 0 auto 16px auto;
             width: 332px;
+        }
+        &__form {
             margin: 0 auto;
         }
     }

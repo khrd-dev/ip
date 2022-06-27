@@ -50,10 +50,10 @@ export default {
             this.isIndexFade = index;
             setTimeout(() => {
                 this.isIndexFade = null;
-            }, 1000);
+            }, 600);
             setTimeout(() => {
                 this.$store.dispatch("deleteItem", index);
-            }, 1000);
+            }, 599);
         },
         sortedByMinPrice() {
             this.sortIsActive = "По возрастанию цены";
@@ -129,6 +129,9 @@ export default {
 @media (max-width: 780px) {
     .v-catalog {
         max-width: 332px;
+        &__select {
+            margin-right: 0;
+        }
     }
 }
 
@@ -138,13 +141,13 @@ export default {
     }
     to {
         opacity: 0;
+        transform: rotateY(-90deg);
     }
 }
 .fading {
-    animation: fade 1s ease forwards;
+    animation: fade 0.8s ease forwards;
 }
-.fade-enter,
-.fade-leave-active {
+.fade-enter {
     opacity: 0;
     transform: translateY(20px);
 }
