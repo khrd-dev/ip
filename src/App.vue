@@ -12,8 +12,6 @@
     font-family: "Source Sans Pro", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: #e5e5e5;
-    background-size: cover;
 }
 HTML,
 body {

@@ -1,10 +1,8 @@
 <template>
     <div class="home">
         <div class="home__content">
-            <section class="home__content_elem">
-                <v-add-item></v-add-item>
-                <v-catalog></v-catalog>
-            </section>
+            <v-add-item></v-add-item>
+            <v-catalog></v-catalog>
         </div>
     </div>
 </template>
@@ -24,28 +22,11 @@ export default {
 
 <style lang="scss" scoped>
 .home {
+    padding: 32px 24px;
     align-items: center;
     margin: 0 auto;
     min-height: 1024px;
-    &__content {
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-        margin: 0 24px 24px 24px;
-    }
-    &_elem {
-        display: flex;
-    }
-}
-
-@media (max-width: 1140px) {
-    .home__content {
-        margin: 15px;
-        &_elem {
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-        }
-    }
+    min-width: 420px;
+    background: #e5e5e5;
 }
 </style>

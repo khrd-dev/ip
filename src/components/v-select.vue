@@ -1,7 +1,7 @@
 <template>
     <div class="v-select">
         <button class="v-select__drop-btn sort-btn">
-            По умолчанию
+            {{ sortIsActive }}
             <img src="../assets/drop-btn.png" alt="drop-btn" />
         </button>
         <div class="v-select__choose">
@@ -21,6 +21,14 @@
 <script>
 export default {
     name: "v-select",
+    props: {
+        sortIsActive: {
+            type: String,
+            default() {
+                return "";
+            },
+        },
+    },
     data() {
         return {};
     },
@@ -42,14 +50,22 @@ export default {
 .v-select {
     position: relative;
     display: inline-block;
-    margin: 32px 8px 22px 0;
+    margin-bottom: 16px;
+    z-index: 2;
+    &__drop-btn {
+        img {
+            width: 8px;
+            height: 5px;
+            position: relative;
+            top: -1px;
+        }
+    }
     &__choose {
         display: none;
         position: absolute;
         z-index: 1;
         button {
             border-radius: 0;
-            cursor: pointer;
         }
     }
     &__drop-btn:hover + &__choose,
@@ -71,6 +87,7 @@ export default {
     color: #b4b4b4;
     padding: 0;
     margin: 0;
+    cursor: pointer;
     &:hover {
         background: #e6e6e6;
     }

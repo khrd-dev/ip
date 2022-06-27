@@ -5,22 +5,23 @@
                 @sortedByName="sortedByName"
                 @sortedByMinPrice="sortedByMinPrice"
                 @sortedByMaxPrice="sortedByMaxPrice"
+                :sortIsActive="sortIsActive"
             />
         </div>
-        <div class="v-catalog__list">
+        <transition-group tag="div" name="fade" class="v-catalog__list">
             <v-catalog-item
                 v-for="(product, index) in this.$store.state.products"
                 :key="product.id"
                 :productData="product"
-                @mouseenter.native="mouseIsHere(index, product)"
-                @mouseleave.native="isIndexHovered = null"
+                :isHoveredId="isIdHovered"
+                @mouseenter.native="mouseIsHere(product.id)"
+                @mouseleave.native="isIdHovered = null"
                 @deleteItem="deleteItem(index)"
                 :class="{
-                    hovered: isIndexHovered === index,
                     fading: isIndexFade === index,
                 }"
             />
-        </div>
+        </transition-group>
     </div>
 </template>
 
@@ -36,15 +37,14 @@ export default {
     },
     data() {
         return {
-            isIndexHovered: null,
+            isIdHovered: null,
             isIndexFade: null,
-            sortedProducts: [],
+            sortIsActive: "По умолчанию",
         };
     },
     methods: {
-        mouseIsHere(index) {
-            this.isIndexHovered = index;
-            console.log(index);
+        mouseIsHere(id) {
+            this.isIdHovered = id;
         },
         deleteItem(index) {
             this.isIndexFade = index;
@@ -56,7 +56,7 @@ export default {
             }, 1000);
         },
         sortedByMinPrice() {
-            this.sortedProducts = [];
+            this.sortIsActive = "По возрастанию цены";
             this.$store.state.products.sort((a, b) => {
                 if (+a.price > +b.price) {
                     return 1;
@@ -68,7 +68,7 @@ export default {
             });
         },
         sortedByMaxPrice() {
-            this.sortedProducts = [];
+            this.sortIsActive = "По убыванию цены";
             this.$store.state.products.sort((a, b) => {
                 if (+a.price > +b.price) {
                     return -1;
@@ -80,7 +80,7 @@ export default {
             });
         },
         sortedByName() {
-            this.sortedProducts = [];
+            this.sortIsActive = "По наименованию";
             this.$store.state.products.sort((a, b) => {
                 if (a.nameItem > b.nameItem) {
                     return 1;
@@ -98,6 +98,7 @@ export default {
 
 <style lang="scss" scoped>
 .v-catalog {
+    max-width: 1392px;
     margin-left: 340px;
     &__select {
         max-width: 122px;
@@ -107,19 +108,30 @@ export default {
     &__list {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-around;
-        align-items: center;
+    }
+}
+
+@media (max-width: 1780px) {
+    .v-catalog {
+        max-width: 1044px;
+    }
+}
+@media (max-width: 1432px) {
+    .v-catalog {
+        max-width: 697px;
     }
 }
 @media (max-width: 1140px) {
     .v-catalog {
-        margin-left: 0 !important;
-        &__list {
-            align-items: center;
-            justify-content: space-around;
-        }
+        margin: 0 auto;
     }
 }
+@media (max-width: 780px) {
+    .v-catalog {
+        max-width: 332px;
+    }
+}
+
 @keyframes fade {
     from {
         opacity: 1;
@@ -128,8 +140,18 @@ export default {
         opacity: 0;
     }
 }
-
 .fading {
     animation: fade 1s ease forwards;
+}
+.fade-enter,
+.fade-leave-active {
+    opacity: 0;
+    transform: translateY(20px);
+}
+.fade-enter-active {
+    transition: opacity 1s, transform 1s;
+}
+.fade-move {
+    transition: transform 1s;
 }
 </style>
