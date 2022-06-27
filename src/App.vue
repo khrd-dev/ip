@@ -12,6 +12,12 @@
     font-family: "Source Sans Pro", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: #e5e5e5;
+}
+HTML,
+body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
 }
 </style>
